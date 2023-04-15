@@ -1,0 +1,260 @@
+//Luiggy likes to make friends and is always expanding his list of friends on the social network ListBook. The ListBook allows you to include your new friends in your
+// friendship list and also refer them to other friends in your network, all dynamically, with no limits on friends in your network. As Luiggy is your friend, 
+//he asked you to create a program to make his life easier with this task. For this, Luiggy had the following idea:
+
+    //The program should read Luiggy's current list of friends;
+    //The program should read Luiggy's new list of friends;
+    //The program should read the name of the current friend who will receive the new list as an indication of friends.
+
+//Input
+    //You should read Luiggy L's list of friends in a single line, containing only the first name and separated by a blank space. In the second line,
+    // the new list of friends N must be informed. In the last line, the name of friend S from the network that you want to indicate also this new list of friends N.
+    // If you do not want to indicate the new list of friends to anyone, just type in last line the word “no”.
+
+//Output
+    //Your program should display Luiggy's new updated friends list. If there is an indication of a friend on the list, the new friends must be inserted before the name
+    //of the indicated friend. If there is no indication, the new names must be inserted at the end of Luiggy's list of friends.
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+// Definição da estrutura do nó da lista encadeada
+struct Node {
+    char nome[MAX];
+    struct Node *prox;
+};
+
+typedef struct Node *No; // Definição de um ponteiro para a estrutura Node
+
+// Função para criar um novo nó com o nome fornecido
+No criaNo(char *nome, int tam) {
+    No novoNo = (No) malloc(sizeof(struct Node)); // Aloca memória para o novo nó
+    int i;
+1
+//Luiggy likes to make friends and is always expanding his list of friends on the social network ListBook. The ListBook allows you to include your new friends in your
+2
+// friendship list and also refer them to other friends in your network, all dynamically, with no limits on friends in your network. As Luiggy is your friend, 
+3
+//he asked you to create a program to make his life easier with this task. For this, Luiggy had the following idea:
+4
+​
+5
+    //The program should read Luiggy's current list of friends;
+6
+    //The program should read Luiggy's new list of friends;
+7
+    //The program should read the name of the current friend who will receive the new list as an indication of friends.
+8
+​
+9
+//Input
+10
+    //You should read Luiggy L's list of friends in a single line, containing only the first name and separated by a blank space. In the second line,
+11
+    // the new list of friends N must be informed. In the last line, the name of friend S from the network that you want to indicate also this new list of friends N.
+12
+    // If you do not want to indicate the new list of friends to anyone, just type in last line the word “no”.
+13
+​
+14
+//Output
+15
+    //Your program should display Luiggy's new updated friends list. If there is an indication of a friend on the list, the new friends must be inserted before the name
+16
+    //of the indicated friend. If there is no indication, the new names must be inserted at the end of Luiggy's list of friends.
+17
+​
+18
+#include <stdlib.h>
+19
+#include <stdio.h>
+20
+#include <string.h>
+21
+​
+22
+#define MAX 100
+23
+​
+24
+// Definição da estrutura do nó da lista encadeada
+25
+struct Node {
+26
+    char nome[MAX];
+27
+    struct Node *prox;
+28
+};
+29
+​
+30
+typedef struct Node *No; // Definição de um ponteiro para a estrutura Node
+31
+​
+32
+// Função para criar um novo nó com o nome fornecido
+33
+No criaNo(char *nome, int tam) {
+34
+    No novoNo = (No) malloc(sizeof(struct Node)); // Aloca memória para o novo nó
+35
+    int i;
+36
+    for (i = 0; i < tam; i++) {
+37
+        novoNo->nome[i] = nome[i];
+38
+    }
+39
+    novoNo->nome[i] = '\0';
+40
+    novoNo->prox = NULL;
+41
+    return novoNo;
+42
+}
+43
+​
+44
+// Função para inserir um novo nó no final da lista
+45
+No insereNo(No raiz, char *nome, int tam) {
+46
+    No aux = raiz;
+47
+    int i;
+48
+    No novoNo = (No) malloc(sizeof(struct Node)); // Aloca memória para o novo nó
+49
+    for (i = 0; i < tam; i++) {
+50
+        novoNo->nome[i] = nome[i];
+51
+    }
+52
+    novoNo->nome[i] = '\0';
+53
+    novoNo->prox = NULL;
+
+    for (i = 0; i < tam; i++) {
+        novoNo->nome[i] = nome[i];
+    }
+    novoNo->nome[i] = '\0';
+    novoNo->prox = NULL;
+    return novoNo;
+}
+
+// Função para inserir um novo nó no final da lista
+No insereNo(No raiz, char *nome, int tam) {
+    No aux = raiz;
+    int i;
+    No novoNo = (No) malloc(sizeof(struct Node)); // Aloca memória para o novo nó
+    for (i = 0; i < tam; i++) {
+        novoNo->nome[i] = nome[i];
+    }
+    novoNo->nome[i] = '\0';
+    novoNo->prox = NULL;
+    
+    // Navega até o último nó da lista
+    while (aux->prox != NULL) {
+        aux = aux->prox;
+    }
+
+    // Conecta o novo nó ao último nó da lista
+    aux->prox = novoNo;
+
+    return raiz;
+}
+
+// Função para buscar uma string na lista e quebrá-la em palavras, inserindo-as na lista
+No busca(No raiz, char *string) {
+    int i, j;
+    i = 0;
+    int criado = 0;
+    int tam = strlen(string); // Obtém o tamanho da string informada
+    for (j = 0; j <= tam; j++) { // Adicionado o igual para considerar o caractere nulo no final da string
+        char aux = string[j];
+        if (aux == ' ' || aux == '\0') {
+            if (criado == 0) {
+                raiz = criaNo(string + i, j - i);
+                i = j + 1; // Adicionado +1 para pular o espaço em branco
+                criado = 1;
+                if (aux == '\0') break;
+            } else {
+                raiz = insereNo(raiz, string + i, j - i);
+                i = j + 1; // Adicionado +1 para pular o espaço em branco
+                if (aux == '\0') break;
+            }
+        }
+    }
+
+    return raiz;
+}
+
+
+// Função para imprimir os nomes na lista
+void printa(No raiz) {
+    No aux = raiz;
+    printf("%s", aux->nome);
+    while (aux->prox != NULL) {
+        aux = aux->prox;
+        if (aux->nome[0] != '\0') printf(" %s", aux->nome); // Corrigido a comparação
+    }  
+}
+
+// Função para conectar a lista raiz no fim da lista raiz2
+No conectaFim(No raiz, No raiz2) {
+    No aux = raiz;
+    while (aux->prox != NULL) {
+        aux = aux->prox;
+    }
+    aux->prox = raiz2;
+
+    return raiz;
+}
+
+// Função para limpar a memória alocada pela lista encadeada
+void limpa(No raiz) {
+    No aux = raiz;
+    No aux2;
+    while (aux != NULL) {
+        aux2 = aux->prox;
+        free(aux);
+        aux = aux2;
+    }
+}
+
+int main() {
+    No raiz1 = NULL; // Ponteiro para a raiz da primeira lista encadeada
+    No raiz2 = NULL; // Ponteiro para a raiz da segunda lista encadeada
+    char string1[MAX]; // String para a primeira entrada do usuário
+    char string2[MAX]; // String para a segunda entrada do usuário
+
+    fgets(string1, MAX, stdin); // Lê a primeira string do usuário
+    fgets(string2, MAX, stdin); // Lê a segunda string do usuário
+
+    string1[strcspn(string1, "\n")] = '\0'; // Remove o caractere de nova linha da string1
+    string2[strcspn(string2, "\n")] = '\0'; // Remove o caractere de nova linha da string2
+
+    // Realiza a busca e criação da lista encadeada para a primeira string
+    raiz1 = busca(raiz1, string1);
+
+    // Realiza a busca e criação da lista encadeada para a segunda string
+    raiz2 = busca(raiz2, string2);
+
+    // Conecta as duas listas encadeadas
+    raiz1 = conectaFim(raiz1, raiz2);
+
+    // Imprime os nomes na lista final
+    printa(raiz1);
+    printf("\n");
+
+    // Libera a memória alocada pela lista encadeada
+    limpa(raiz1);
+
+    return 0;
+}
