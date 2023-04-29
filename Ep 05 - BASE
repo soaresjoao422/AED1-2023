@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MIN_VALOR -10000
+#define MAX_VALOR 10000
+
+void preencher_vetor(int *vetor, int tamanho) {
+    srand(time(NULL)); // semente para gerar números aleatórios
+    for (int i = 0; i < tamanho; i++) {
+        vetor[i] = rand() % (MAX_VALOR - MIN_VALOR + 1) + MIN_VALOR; // número aleatório no intervalo [-10000, 10000]
+    }
+}
+
+//o tipo de busca deve ser inserido aqui
+
+void medir_tempo_execucao( ) { //colocar os parametros da função
+    clock_t inicio, fim;
+    double tempo_gasto;
+    inicio = clock();
+    //funcao executada
+    fim = clock();
+    tempo_gasto = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    printf("Tempo de execucao: %lf segundos.\n", tempo_gasto);
+}
+
+int main() {
+    int n;
+    printf("Informe o tamanho do vetor: ");
+    scanf("%d", &n);
+    int v[n];
+    preencher_vetor(v, n);
+    printf("Vetor preenchido com sucesso\n");
+    Insercao(n, v);
+    printf("Vetor ordenado com sucesso\n");
+    medir_tempo_execucao();
+    return 0;
+}
