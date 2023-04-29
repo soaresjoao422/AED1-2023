@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MIN_VALOR -10000
+#define MAX_VALOR 10000
+
+void preencher_vetor(int *vetor, int tamanho) {
+    srand(time(NULL)); // semente para gerar números aleatórios
+    for (int i = 0; i < tamanho; i++) {
+        vetor[i] = rand() % (MAX_VALOR - MIN_VALOR + 1) + MIN_VALOR; // número aleatório no intervalo [-10000, 10000]
+    }
+}
+
+void Intercala(int *v, int inicio, int meio, int fim) {
+    int *aux = (int*) malloc((fim-inicio+1) * sizeof(int));
+    int i = inicio, j = meio+1, k = 0;
+    
+    while (i <= meio && j <= fim) {
+        if (v[i] <= v[j]) {
+            aux[k++] = v[i++];
+        }
+        else {
+            aux[k++] = v[j++];
+        }
+    }
+    
+    while (i <= meio) {
+        aux[k++] = v[i++];
+    }
+    
+    while (j <= fim) {
+        aux[k++] = v[j++];
+    }
+    
+    for (i = inicio, k = 0; i <= fim; i++, k++) {
+        v[i] = aux[k];
+    }
+    
+    free(aux);
+}
+
+
+void merge_sort(int v[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        merge_sort(v, l, m);
+        merge_sort(v, m + 1, r);
+        Intercala(v, l, m, r);
+    }
+}
+
+void medir_tempo_execucao(int v[], int n) {
+    clock_t inicio, fim;
+    double tempo_gasto;
+    inicio = clock();
+    merge_sort(v, 0, n - 1);
+    fim = clock();
+    tempo_gasto = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    printf("Tempo de execucao: %lf segundos.\n", tempo_gasto);
+}
+
+int main() {
+    int n;
+    printf("Informe o tamanho do vetor: ");
+    scanf("%d", &n);
+    int v[n];
+    preencher_vetor(v, n);
+    printf("Vetor preenchido com sucesso\n");
+    medir_tempo_execucao(v, n);
+    return 0;
+}
