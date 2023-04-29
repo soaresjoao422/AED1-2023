@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MIN_VALOR -10000
+#define MAX_VALOR 10000
+
+void preencher_vetor(int *vetor, int tamanho) {
+    srand(time(NULL)); // semente para gerar números aleatórios
+    for (int i = 0; i < tamanho; i++) {
+        vetor[i] = rand() % (MAX_VALOR - MIN_VALOR + 1) + MIN_VALOR; // número aleatório no intervalo [-10000, 10000]
+    }
+}
+
+void heapify(int *v, int n, int i) {
+    int maior = i; // inicializa o maior como a raiz
+    int esq = 2 * i + 1;
+    int dir = 2 * i + 2;
+    // se o filho da esquerda é maior que a raiz
+    if (esq < n && v[esq] > v[maior]) {
+        maior = esq;
+    }
+    // se o filho da direita é maior que o maior até então
+    if (dir < n && v[dir] > v[maior]) {
+        maior = dir;
+    }
+    // se o maior não é a raiz
+    if (maior != i) {
+        // troca a raiz com o maior
+        int tmp = v[i];
+        v[i] = v[maior];
+        v[maior] = tmp;
+        // chama recursivamente heapify para o subárvore afetada
+    heapify(v, n, maior);
+    }
+}
+
+void heap_sort(int *v, int n) {
+    // constrói a heap (rearranja o array)
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(v, n, i);
+    }
+    // extrai um por um dos elementos da heap
+    for (int i = n - 1; i >= 0; i--) {
+        // move a raiz atual para o final
+        int tmp = v[0];
+        v[0] = v[i];
+        v[i] = tmp;
+        // chama heapify na heap reduzida
+        heapify(v, i, 0);
+    }
+}
+
+void medir_tempo_execucao(int v[], int n) {
+    clock_t inicio, fim;
+    double tempo_gasto;
+    inicio = clock();
+    heap_sort(v, n);
+    fim = clock();
+    tempo_gasto = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    printf("Tempo de execucao do Heap Sort: %lf segundos.\n", tempo_gasto);
+}
+
+int main() {
+    int n;
+    printf("Informe o tamanho do vetor: ");
+    scanf("%d", &n);
+    int v[n];
+    preencher_vetor(v, n);
+    printf("Vetor preenchido com sucesso\n");
+    medir_tempo_execucao(v, n);
+    return 0;
+}
