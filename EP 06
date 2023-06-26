@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+void computarTabelaLPS(char *padrao, int tamanhoPadrao, int *lps) {
+    int len = 0;
+    lps[0] = 0;
+    int i = 1;
+
+    while (i < tamanhoPadrao) {
+        if (padrao[i] == padrao[len] || padrao[i] == padrao[len] - 'a' + 'A') {
+            len++;
+            lps[i] = len;
+            i++;
+        } else {
+            if (len != 0) {
+                len = lps[len - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+}
+
+bool buscaKMP(char *padrao, char *texto) {
+    int tamanhoPadrao = strlen(padrao);
+    int tamanhoTexto = strlen(texto);
+
+    int lps[tamanhoPadrao];
+    computarTabelaLPS(padrao, tamanhoPadrao, lps);
+
+    int i = 0; // índice para o texto
+    int j = 0; // índice para o padrão
+
+    while (i < tamanhoTexto) {
+        if (padrao[j] == texto[i] || padrao[j] == texto[i] - 'a' + 'A') {
+            j++;
+            i++;
+        }
+
+        if (j == tamanhoPadrao) {
+            return true;
+        } else if (i < tamanhoTexto && padrao[j] != texto[i]) {
+            if (j != 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    char texto[100001];
+    scanf("%s", texto);
+
+    // Converte todas as letras para minúsculas para facilitar a comparação
+    for (int i = 0; i < strlen(texto); i++) {
+        texto[i] = tolower(texto[i]);
+    }
+
+    // Verifica se a string contém a palavra "zelda" usando o algoritmo KMP
+    if (buscaKMP("zelda", texto)) {
+        printf("Link Bolado\n");
+    } else {
+        printf("Link Tranquilo\n");
+    }
+
+    return 0;
+}
