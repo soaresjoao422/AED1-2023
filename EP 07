@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct no{
+    int dado;
+    struct no* esquerda;
+    struct no* direita;
+}No;
+
+//função p criar um novo no:
+No* criar_No(int dado){
+    No* novoNo =(No*)malloc(sizeof(No));
+
+    novoNo->dado=dado;
+    novoNo->esquerda=NULL;
+    novoNo->direita=NULL;
+
+    return novoNo;
+}
+
+//função p inserir um nó na árvore:
+No* inserir_No(No* raiz, int dado){
+    if(raiz==NULL)
+        return criar_No(dado);
+    else{
+        if (dado < raiz->dado)
+            raiz->esquerda = inserir_No(raiz->esquerda, dado);
+        else{
+            if (dado > raiz->dado)
+                raiz->direita = inserir_No(raiz->direita, dado);
+        }
+    }
+    return raiz;
+}
+
+//função mostra na ordem prefixa:
+void ordem_Prefixa(No* raiz){
+    if( raiz != NULL){
+        printf("%d\n", raiz->dado);
+        ordem_Prefixa(raiz->esquerda);
+        ordem_Prefixa(raiz->direita);
+    }
+}
+
+//função mostra na ordem infixa:
+void ordem_Infixa(No* raiz){
+    if( raiz != NULL){
+        ordem_Infixa(raiz->esquerda);
+        printf("%d\n", raiz->dado);
+        ordem_Infixa(raiz->direita);
+    }
+}
+
+//função mostra na ordem posfixa:
+void ordem_Posfixa(No* raiz){
+    if( raiz != NULL){
+        ordem_Posfixa(raiz->esquerda);
+        ordem_Posfixa(raiz->direita);
+        printf("%d\n", raiz->dado);
+    }
+}
+
+//função p buscar um nó na árvore:
+void Busca_No(No* raiz, int dado){
+    if(raiz==NULL){
+        printf("nao existe\n");
+    }
+    else{
+        if(dado < raiz->dado){
+            Busca_No(raiz->esquerda, dado);
+        }
+        else{
+            if(dado > raiz->dado){
+                Busca_No(raiz->direita, dado);
+            }
+            else
+                printf("nao existe\n");
+        }
+    }
+}
+
+int main(){
+    No* raiz = NULL;
+    char comando;
+    int valor;
+
+    //ler a primeira inserção:
+    scanf("%*c %d", &valor);
+    raiz = inserir_No(raiz, valor);    
+
+    //ler os outros comandos dados pelo usuário:
+    while(scanf(" %c", &comando) != EOF){
+        switch(comando){
+            case 'I':{
+                scanf("%d", &valor);
+                raiz = inserir_No(raiz, valor);
+                break;
+            }
+            case 'P':{
+                scanf("%d", &valor);
+                Busca_No(raiz, valor);
+                break;
+            }
+            case 'PREFIXA':{
+                ordem_Prefixa(raiz);
+                break;
+            }
+            case 'INFIXA':{
+                ordem_Infixa(raiz);
+                break;
+            }
+            case 'POSFIXA':{
+                ordem_Posfixa(raiz);
+                break;
+            }
+        }
+    }
+    return 0;
+}
