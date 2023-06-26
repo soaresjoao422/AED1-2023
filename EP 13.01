@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_LINHAS 10000
+#define MAX_CARACTERES 200
+#define MAX_PALAVRAS 5000
+
+// Função para comparar duas strings de forma case-insensitive
+int compararStrings(const void *a, const void *b) {
+    return strcasecmp(*(const char **)a, *(const char **)b);
+}
+
+int main() {
+    char entrada[MAX_LINHAS][MAX_CARACTERES + 1];
+    char *palavras[MAX_PALAVRAS];
+    int numPalavras = 0;
+    int i, j;
+
+    // Ler o texto de entrada
+    for (i = 0; i < MAX_LINHAS && fgets(entrada[i], sizeof(entrada[i]), stdin); i++) {
+        // Remover o caractere de nova linha no final
+        entrada[i][strcspn(entrada[i], "\n")] = '\0';
+    }
+    int numLinhas = i;
+
+    // Extrair as palavras do texto de entrada
+    for (i = 0; i < numLinhas; i++) {
+        char *palavra = strtok(entrada[i], " ");
+        while (palavra != NULL) {
+            // Converter a palavra para minúsculas
+            for (j = 0; palavra[j]; j++) {
+                palavra[j] = tolower(palavra[j]);
+            }
+            
+            // Adicionar a palavra à lista se ainda não estiver presente
+            int duplicada = 0;
+            for (j = 0; j < numPalavras; j++) {
+                if (strcmp(palavra, palavras[j]) == 0) {
+                    duplicada = 1;
+                    break;
+                }
+            }
+            if (!duplicada) {
+                palavras[numPalavras] = strdup(palavra);
+                numPalavras++;
+            }
+            
+            palavra = strtok(NULL, " ");
+        }
+    }
+
+    // Ordenar as palavras em ordem alfabética
+    qsort(palavras, numPalavras, sizeof(char *), compararStrings);
+
+    // Imprimir as palavras ordenadas
+    for (i = 0; i < numPalavras; i++) {
+        printf("%s\n", palavras[i]);
+        free(palavras[i]);
+    }
+
+    return 0;
+}
